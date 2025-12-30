@@ -16,7 +16,7 @@ pipeline {
         stage('Convert Excel to XML') {
             steps {
                 bat """
-                python excel_to_xml_advance.py "%WORKSPACE%\\%UPLOAD_FILE%"
+                python excel_to_xml.py "%WORKSPACE%\\%UPLOAD_FILE%"
                 """
             }
         }
