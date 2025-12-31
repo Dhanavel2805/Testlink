@@ -14,6 +14,15 @@ pipeline {
         stage('Convert Excel to XML') {
             steps {
                 sh '''
+
+                 set -e
+
+        echo "Uploaded file parameter: $UPLOAD_FILE"
+        echo "Workspace: $WORKSPACE"
+
+        # ALWAYS copy uploaded file to a known name
+        cp "$UPLOAD_FILE" input.xlsx
+        
                 VENV_PY="/opt/jenkins-venv/bin/python"
 
                 if [ ! -x "$VENV_PY" ]; then
