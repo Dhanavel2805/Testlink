@@ -15,9 +15,19 @@ pipeline {
 
         stage('Convert Excel to XML') {
             steps {
-                bat """
-                python excel_to_xml.py "%WORKSPACE%\\%UPLOAD_FILE%"
-                """
+                sh '''
+                    echo "Workspace: $WORKSPACE"
+                    echo "Uploaded file name: $UPLOAD_FILE"
+
+                    UPLOAD_PATH="$WORKSPACE@tmp/fileParameters/$UPLOAD_FILE"
+
+                    if [ ! -f "$UPLOAD_PATH" ]; then
+                        echo "ERROR: Uploaded file not found at $UPLOAD_PATH"
+                        exit 1
+                    fi
+
+                    python3 excel_to_xml.py "$UPLOAD_PATH"
+                '''
             }
         }
     }
