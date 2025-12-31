@@ -1,46 +1,67 @@
+import sys
+import os
 import pandas as pd
 from lxml import etree as ET
 from datetime import datetime
 
-# Load Excel file
-df = pd.read_excel("DR-2995_Testcases.xlsx", sheet_name="Sheet1")
+# -------------------------
+# Validate input arguments
+# -------------------------
+if len(sys.argv) < 2:
+    print("ERROR: Excel file path not provided")
+    sys.exit(1)
 
-# Drop unnamed columns
-df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+excel_file = sys.argv[1]
 
-# Create root element
+if not os.path.isfile(excel_file):
+    print(f"ERROR: Excel file not found -> {excel_file}")
+    sys.exit(1)
+
+print(f"Using Excel file: {excel_file}")
+
+# -------------------------
+# Read Excel (FIRST sheet)
+# -------------------------
+try:
+    df = pd.read_excel(excel_file)  # first sheet automatically
+except Exception as e:
+    print(f"ERROR reading Excel file: {e}")
+    sys.exit(1)
+
+# -------------------------
+# Clean dataframe
+# -------------------------
+df = df.loc[:, ~df.columns.str.contains('^Unnamed', na=False)]
+
+print(f"Columns detected: {list(df.columns)}")
+print(f"Total rows: {len(df)}")
+
+# -------------------------
+# Create XML structure
+# -------------------------
 root = ET.Element("testcases")
 
-for index, row in df.iterrows():
-    testcase = ET.SubElement(root, "testcase", {
-        "name": str(row.get("Testcase ID", index + 1))
-    })
+for _, row in df.iterrows():
+    testcase = ET.SubElement(root, "testcase")
 
-    # Add custom fields
-    custom_fields = ET.SubElement(testcase, "custom_fields")
     for col in df.columns:
-        name = str(col)
-        value = str(row[col]) if pd.notna(row[col]) else ""
+        child = ET.SubElement(testcase, col.replace(" ", "_"))
+        value = row[col]
+        child.text = "" if pd.isna(value) else str(value)
 
-        cf = ET.SubElement(custom_fields, "custom_field")
-        name_elem = ET.SubElement(cf, "name")
-        name_elem.text = ET.CDATA(name)
+# -------------------------
+# Write XML output
+# -------------------------
+today = datetime.now().strftime("%Y-%m-%d")
+base_name = os.path.splitext(os.path.basename(excel_file))[0]
+output_file = f"{base_name}_{today}.xml"
 
-        value_elem = ET.SubElement(cf, "value")
-        value_elem.text = ET.CDATA(value)
-
-# Save to XML file
 tree = ET.ElementTree(root)
-# Get today's date (YYYY-MM-DD)
-today_date = datetime.now().strftime("%Y-%m-%d")
-
 tree.write(
-    f"OrderSummary_ItemDetails_Page_{today_date}.xml",
-    encoding="utf-8",
+    output_file,
+    pretty_print=True,
     xml_declaration=True,
-    pretty_print=True
+    encoding="UTF-8"
 )
 
-print("Success!")
-
-
+print(f"XML successfully created: {output_file}")
