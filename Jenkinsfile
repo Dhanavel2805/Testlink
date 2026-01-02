@@ -56,7 +56,7 @@ pipeline {
                         git config user.name "jenkins-bot"
                         git config user.email "jenkins@local"
 
-                        git clone https://$Dhanavel/******@github.com/Dhanavel2805/Testlink_XML_to_Excel.git target_repo
+                        git clone https://$DockerToken@github.com/Dhanavel2805/Testlink_XML_to_Excel.git target_repo
                         cp "$XML_FILE" target_repo/
                         cd target_repo
 
