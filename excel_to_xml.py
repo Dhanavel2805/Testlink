@@ -31,12 +31,11 @@ for index, row in df.iterrows():
 
 # Save to XML file
 tree = ET.ElementTree(root)
+
 # Get today's date (YYYY-MM-DD)
 today_date = datetime.now().strftime("%Y-%m-%d")
-output_file = f"OrderSummary_ItemDetails_Page_{today_date}.xml"
+output_file = f"OrderSummary_ItemDetails_{today_date}.xml"
 
-tree.write(" output_file,", encoding="utf-8", xml_declaration=True, pretty_print=True)
+tree.write(output_file, encoding="utf-8", xml_declaration=True, pretty_print=True)
 
 print("Success!")
-
-
