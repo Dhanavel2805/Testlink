@@ -19,7 +19,7 @@ pipeline {
                     echo "Workspace: $WORKSPACE"
                     echo "Uploaded file name: $UPLOAD_FILE"
 
-                    UPLOAD_PATH="$WORKSPACE@tmp/fileParameters/$UPLOAD_FILE"
+                    UPLOAD_PATH="$WORKSPACE/fileParameters/$UPLOAD_FILE"
 
 
 
