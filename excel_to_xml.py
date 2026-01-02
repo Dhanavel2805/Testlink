@@ -1,5 +1,6 @@
 import pandas as pd
 from lxml import etree as ET
+from datetime import datetime
 
 # Load Excel file
 df = pd.read_excel("DR-2995_Testcases.xlsx", sheet_name="Sheet1")
@@ -30,6 +31,10 @@ for index, row in df.iterrows():
 
 # Save to XML file
 tree = ET.ElementTree(root)
-tree.write("OrderSummary_ItemDetails_Page.xml", encoding="utf-8", xml_declaration=True, pretty_print=True)
+# Get today's date (YYYY-MM-DD)
+today_date = datetime.now().strftime("%Y-%m-%d")
+
+tree.write("OrderSummary_ItemDetails_Page_{today_date}.xml", encoding="utf-8", xml_declaration=True, pretty_print=True)
 
 print("Success!")
+
