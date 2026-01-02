@@ -34,6 +34,45 @@ pipeline {
                 '''
             }
         }
+		
+		 stage('Push XML to GitHub Repo') {
+            when {
+                expression { currentBuild.currentResult == 'SUCCESS' }
+            }
+            steps {
+                withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                    sh '''
+                        set -e
+                        TODAY=$(date +%Y-%m-%d)
+                        XML_FILE=$(ls *_${TODAY}.xml | head -n 1)
+
+                        if [ -z "$XML_FILE" ]; then
+                            echo "ERROR: No XML file found for today"
+                            exit 1
+                        fi
+
+                        echo "Pushing file: $XML_FILE"
+
+                        git config user.name "jenkins-bot"
+                        git config user.email "jenkins@local"
+
+                        git clone https://$Dhanavel/******@github.com/Dhanavel2805/Testlink_XML_to_Excel.git target_repo
+                        cp "$XML_FILE" target_repo/
+                        cd target_repo
+
+                        git add "$XML_FILE"
+                        git commit -m "Add XML generated on $TODAY"
+                        git push origin main
+                    '''
+                }
+            }
+        }
+		
+		
+		
+		
+		
+		
     }
 
     post {
