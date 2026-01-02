@@ -29,7 +29,8 @@ pipeline {
                         exit 1
                     fi
 
-                    python3 excel_to_xml.py "$UPLOAD_PATH"
+                    /opt/jenkins-venv/bin/python excel_to_xml.py "$UPLOAD_PATH"
+
                 '''
             }
         }
