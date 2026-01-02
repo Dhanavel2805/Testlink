@@ -40,3 +40,7 @@ pipeline {
             script {
                 def today = new Date().format('yyyy-MM-dd')
                 archiveArtifacts artifacts: "**/*_${today}.xml", fingerprint: true
+            }
+        }
+    }
+}
