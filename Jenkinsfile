@@ -1,46 +1,47 @@
 pipeline {
     agent any
- parameters {
+
+    parameters {
         file(name: 'UPLOAD_FILE', description: 'Select file to upload')
     }
+
     stages {
 
-         stage('Checkout Repository') {
-           steps {
-               checkout scm
-            }
-        }
+       // stage('Checkout Repository') {
+         //   steps {
+           //     checkout scm
+            //}
+       // }
 
-        stage('Convert Excel to XML') {
-            steps {
-                sh '''
-
-                 set -e
-
-        echo "Uploaded file parameter: $UPLOAD_FILE"
+       stage('Convert Excel to XML') {
+    steps {
+        sh '''
         echo "Workspace: $WORKSPACE"
+        echo "Uploaded file name: $UPLOAD_FILE"
 
-        # ALWAYS copy uploaded file to a known name
-        cp "$UPLOAD_FILE" input.xlsx
-        
-                VENV_PY="/opt/jenkins-venv/bin/python"
+        UPLOAD_DIR="$WORKSPACE@tmp/fileParameters"
+        UPLOAD_PATH="$UPLOAD_DIR/$UPLOAD_FILE"
 
-                if [ ! -x "$VENV_PY" ]; then
-                    echo "ERROR: Virtualenv python not found at $VENV_PY"
-                    exit 1
-                fi
+        if [ ! -f "$UPLOAD_PATH" ]; then
+          echo "ERROR: Uploaded file not found at $UPLOAD_PATH"
+          exit 1
+        fi
 
-                echo "Using virtualenv python:"
-                $VENV_PY --version
+        echo "File found: $UPLOAD_PATH"
 
-                $VENV_PY excel_to_xml.py $UPLOAD_FILE
-                '''
-            }
-        }
+        # Optional: copy to workspace
+        cp "$UPLOAD_PATH" "$WORKSPACE/$UPLOAD_FILE"
+
+        # Run your script
+        python3 excel_to_xml_old.py "$WORKSPACE/$UPLOAD_FILE"
+        '''
+    }
+}
+
     }
 
     post {
-               success {
+        success {
             script {
                 def today = new Date().format('yyyy-MM-dd')
                 archiveArtifacts artifacts: "**/*_${today}.xml", fingerprint: true
