@@ -8,21 +8,21 @@ pipeline {
     stages {
 
 
-         stage('Rename and Process') {
-            steps {
-                script {
+       //  stage('Rename and Process') {
+         //   steps {
+           //     script {
                     // 1. Define a unique name using the build number
-                    def uniqueName = "upload_build_${env.BUILD_NUMBER}.txt"
+             //       def uniqueName = "upload_build_${env.BUILD_NUMBER}.txt"
                     
                     // 2. Move the uploaded file to the unique name
                     // Jenkins initially places the file at the path 'MY_FILE'
-                    sh "mv ${env.UPLOAD_FILE} ${uniqueName}"
+               //     sh "mv ${env.UPLOAD_FILE} ${uniqueName}"
                     
                     // 3. Pass the unique filename to Python
                   //  sh "python3 process_file.py ${uniqueName}"
-                }
-            }
-        }
+                //}
+            //}
+        //}
         stage('Checkout Repository') {
             steps {
                 checkout scm
