@@ -19,7 +19,7 @@ pipeline {
                     sh "mv ${env.UPLOAD_FILE} ${uniqueName}"
                     
                     // 3. Pass the unique filename to Python
-                    sh "python3 process_file.py ${uniqueName}"
+                  //  sh "python3 process_file.py ${uniqueName}"
                 }
             }
         }
