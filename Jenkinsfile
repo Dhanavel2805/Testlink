@@ -13,11 +13,11 @@ pipeline {
                 sh '''
                     echo "Storing uploaded file..."
 
-                    mkdir -p "$WORKSPACE/uploads"
+                  
 
                     if [ -f "$WORKSPACE/$UPLOAD_FILE" ]; then
-                        mv "$WORKSPACE/$UPLOAD_FILE" "$WORKSPACE/uploads/"
-                        echo "File moved to $WORKSPACE/uploads/"
+                        mv "$WORKSPACE/$UPLOAD_FILE" "$WORKSPACE/"
+                        echo "File moved to $WORKSPACE/"
                     else
                         echo "Uploaded file not found for moving!"
                         exit 1
