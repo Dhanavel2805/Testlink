@@ -23,11 +23,11 @@ pipeline {
                 //}
             //}
         //}
-        stage('Checkout Repository') {
-            steps {
-                checkout scm
-            }
-        }
+        //stage('Checkout Repository') {
+          //  steps {
+            //    checkout scm
+            //}
+        //}
 
         stage('Convert Excel to XML') {
             steps {
