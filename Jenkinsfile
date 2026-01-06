@@ -16,7 +16,7 @@ pipeline {
                     
                     // 2. Move the uploaded file to the unique name
                     // Jenkins initially places the file at the path 'MY_FILE'
-                    sh "mv ${env.MY_FILE} ${uniqueName}"
+                    sh "mv ${env.UPLOAD_FILE} ${uniqueName}"
                     
                     // 3. Pass the unique filename to Python
                     sh "python3 process_file.py ${uniqueName}"
